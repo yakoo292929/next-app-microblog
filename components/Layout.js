@@ -1,9 +1,9 @@
-import Head from "next/head";
-import styles from "./layout.module.css";
-import utilStyles from "../styles/utiles.module.css"
+import Head from 'next/head';
+import styles from './layout.module.css';
+import utilStyles from '../styles/utiles.module.css';
 
-const name = "yakoo292929";
-export const siteTitle = "Next.js blog";
+const name = 'yakoo292929';
+export const siteTitle = 'Next.js blog';
 
 function Layout({ children }) {
   return (

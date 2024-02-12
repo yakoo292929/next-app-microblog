@@ -1,13 +1,42 @@
-import Head from "next/head";
-import Image from "next/image";
-import styles from "../styles/Home.module.css";
-import Link from "next/link";
-import Layout from "../components/Layout";
-import utilStyles from "../styles/utiles.module.css"
+import Head from 'next/head';
+import Image from 'next/image';
+import styles from '../styles/Home.module.css';
+import Link from 'next/link';
+import Layout from '../components/Layout';
+import utilStyles from '../styles/utiles.module.css';
+import { getPostsData } from '../lib/post';
 
-export default function Home() {
+/////////////////////////////////
+// SSGの場合
+/////////////////////////////////
+export async function getStaticProps() {
+  const allPostsData = getPostsData(); // id, title, date, thumbnail
+  console.log(allPostsData);
+
+  return {
+    props: {
+      allPostsData,
+    },
+  };
+
+}
+
+/////////////////////////////////
+// SSRの場合
+/////////////////////////////////
+// export async function getServerSideProps(context) {
+//   return {
+//     props: {
+//       // コンポーネントに渡すためのprops
+//     },
+//   };
+// }
+
+
+export default function Home({ allPostsData }) {
   return (
     <Layout>
+
       <section className={utilStyles.headingMd}>
         <p>私はエンジニアです。好きな言語はJavaScript/PHP/RPGⅣです。</p>
       </section>
@@ -15,52 +44,20 @@ export default function Home() {
       <section>
         <h2>📝エンジニアのブログ</h2>
         <div className={styles.grid}>
-          <article>
-            <Link href="/">
-              <img src="/images/thumbnail01.jpg" className={styles.thumbnailImage}/>
-            </Link>
-            <Link href="/">
-              <span className={utilStyles.boldText}>SSGとSSRの使い分けの場面はいつなのか？</span>
-            </Link>
-            <br/>
-            <small className={utilStyles.lightText}>February 23.2023</small>
-          </article>
-
-          <article>
-            <Link href="/">
-              <img src="/images/thumbnail02.jpg" className={styles.thumbnailImage}/>
-            </Link>
-            <Link href="/">
-              <span className={utilStyles.boldText}>SSGとSSRの使い分けの場面はいつなのか？</span>
-            </Link>
-            <br/>
-            <small className={utilStyles.lightText}>February 23.2023</small>
-          </article>
-
-          <article>
-            <Link href="/">
-              <img src="/images/thumbnail03.jpg" className={styles.thumbnailImage}/>
-            </Link>
-            <Link href="/">
-              <span className={utilStyles.boldText}>SSGとSSRの使い分けの場面はいつなのか？</span>
-            </Link>
-            <br/>
-            <small className={utilStyles.lightText}>February 23.2023</small>
-          </article>
-
-          <article>
-            <Link href="/">
-              <img src="/images/thumbnail04.jpg" className={styles.thumbnailImage}/>
-            </Link>
-            <Link href="/">
-              <span className={utilStyles.boldText}>SSGとSSRの使い分けの場面はいつなのか？</span>
-            </Link>
-            <br/>
-            <small className={utilStyles.lightText}>February 23.2023</small>
-          </article>
+          {allPostsData.map(({id, title, date, thumbnail}) => (
+            <article key={id}>
+              <Link href={`/post/${id}`}>
+                <img src={`${thumbnail}`} className={styles.thumbnailImage}/>
+              </Link>
+              <Link href={`/post/${id}`}>
+                <span className={utilStyles.boldText}>{title}</span>
+              </Link>
+              <br/>
+              <small className={utilStyles.lightText}>{date}</small>
+            </article>
+          ))}
         </div>
       </section>
-
 
     </Layout>
   );
